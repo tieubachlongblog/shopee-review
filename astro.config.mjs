@@ -1,7 +1,8 @@
 import { defineConfig } from "astro/config";
+import sitemap from "@astrojs/sitemap";
 
-// ⚠️ Đổi 'site' thành domain thật khi deploy (vd https://review-cua-ban.vercel.app)
-// Sitemap: bật lại sau khi deploy có domain thật (npx astro add sitemap).
+// site dùng cho sitemap + canonical. Đổi nếu sau này mua domain riêng.
 export default defineConfig({
-  site: "https://shopee-review-demo.vercel.app",
+  site: "https://shopee-review.vercel.app",
+  integrations: [sitemap()],
 });
