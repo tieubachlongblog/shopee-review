@@ -1,0 +1,80 @@
+---
+// BaseLayout — khung chung + SEO meta cho mọi trang.
+export interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+}
+const { title, description = "Review sản phẩm công nghệ, sách, decor — đánh giá thật, giá tốt trên Shopee.", image } = Astro.props;
+const siteName = "ReviewHay";
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="canonical" href={canonical} />
+    <title>{title} | {siteName}</title>
+    <meta name="description" content={description} />
+    <!-- Open Graph (chia sẻ FB/Zalo đẹp) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {image && <meta property="og:image" content={image} />}
+    <meta name="robots" content="index, follow" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <style is:global>
+      :root {
+        --bg: #0f1622; --card: #16202e; --line: #233044;
+        --text: #e7eef7; --mut: #93a1b5; --brand: #ee4d2d; --brand2: #ff6b3d;
+        --green: #22c55e; --yellow: #f5b800;
+        --radius: 14px;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg); color: var(--text); line-height: 1.6; }
+      a { color: inherit; text-decoration: none; }
+      img { max-width: 100%; display: block; }
+      .wrap { max-width: 1080px; margin: 0 auto; padding: 0 18px; }
+      header.site { position: sticky; top: 0; z-index: 10; background: rgba(15,22,34,.92);
+        backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+      .nav { display: flex; align-items: center; gap: 18px; height: 62px; }
+      .logo { font-weight: 800; font-size: 20px; }
+      .logo span { color: var(--brand); }
+      .nav a.cat { font-size: 14px; color: var(--mut); }
+      .nav a.cat:hover { color: var(--text); }
+      .nav .spacer { flex: 1; }
+      footer.site { border-top: 1px solid var(--line); margin-top: 50px;
+        padding: 26px 0; color: var(--mut); font-size: 13px; text-align: center; }
+      .badge { display: inline-block; font-size: 12px; font-weight: 700;
+        padding: 3px 10px; border-radius: 999px; }
+      .b-pc { background: rgba(59,130,246,.16); color: #7cb0ff; }
+      .b-sach { background: rgba(34,197,94,.16); color: #4ade80; }
+      .b-decor { background: rgba(245,158,11,.16); color: #fbbf24; }
+      .btn-buy { display: inline-flex; align-items: center; gap: 8px;
+        background: linear-gradient(135deg, var(--brand), var(--brand2));
+        color: #fff; font-weight: 700; padding: 13px 22px; border-radius: 12px;
+        font-size: 15px; box-shadow: 0 6px 20px rgba(238,77,45,.35); }
+    </style>
+  </head>
+  <body>
+    <header class="site">
+      <div class="wrap nav">
+        <a href="/" class="logo">Review<span>Hay</span></a>
+        <a href="/danh-muc/pc" class="cat">Linh kiện PC</a>
+        <a href="/danh-muc/sach" class="cat">Sách</a>
+        <a href="/danh-muc/decor" class="cat">Decor</a>
+        <span class="spacer"></span>
+      </div>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site">
+      <div class="wrap">
+        <p>© 2026 ReviewHay — Trang review affiliate. Một số link là link tiếp thị Shopee.</p>
+      </div>
+    </footer>
+  </body>
+</html>

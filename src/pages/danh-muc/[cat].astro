@@ -1,0 +1,32 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ReviewCard from "../../components/ReviewCard.astro";
+
+export async function getStaticPaths() {
+  const cats = ["pc", "sach", "decor"];
+  return cats.map((cat) => ({ params: { cat } }));
+}
+
+const { cat } = Astro.params;
+const label = { pc: "Linh kiện PC", sach: "Sách", decor: "Decor" }[cat];
+const reviews = (await getCollection("reviews"))
+  .filter((r) => r.data.category === cat)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+<BaseLayout title={`Review ${label}`} description={`Tổng hợp bài đánh giá ${label} — chọn món tốt, giá hời trên Shopee.`}>
+  <section class="wrap" style="padding-top:30px;">
+    <h1 style="font-size:28px;margin-bottom:6px;">Review {label}</h1>
+    <p style="color:var(--mut);margin-bottom:22px;">{reviews.length} bài đánh giá</p>
+    {reviews.length === 0 ? (
+      <p style="color:var(--mut);">Chưa có bài nào trong mục này.</p>
+    ) : (
+      <div class="grid">
+        {reviews.map((review) => <ReviewCard review={review} />)}
+      </div>
+    )}
+  </section>
+</BaseLayout>
+<style>
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
+</style>

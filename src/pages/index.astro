@@ -1,0 +1,57 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ReviewCard from "../components/ReviewCard.astro";
+
+const reviews = (await getCollection("reviews")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+const featured = reviews.find((r) => r.data.featured) || reviews[0];
+const rest = reviews.filter((r) => r.id !== featured?.id);
+---
+<BaseLayout title="Review sản phẩm công nghệ, sách & decor">
+  <section class="hero">
+    <div class="wrap">
+      <h1>Review thật — Giá tốt — Mua chuẩn 🛒</h1>
+      <p>Đánh giá khách quan linh kiện PC, sách hay và đồ decor đẹp. Chọn đúng món, tiết kiệm thời gian.</p>
+    </div>
+  </section>
+
+  {featured && (
+    <section class="wrap">
+      <a href={`/review/${featured.slug}`} class="feat">
+        <div class="feat-img"><img src={featured.data.image} alt={featured.data.productName} /></div>
+        <div class="feat-body">
+          <span class={`badge b-${featured.data.category}`}>Nổi bật</span>
+          <h2>{featured.data.title}</h2>
+          <p>{featured.data.description}</p>
+          <span class="feat-price">{featured.data.price}</span>
+        </div>
+      </a>
+    </section>
+  )}
+
+  <section class="wrap">
+    <h2 class="sec-title">Bài đánh giá mới nhất</h2>
+    <div class="grid">
+      {rest.map((review) => <ReviewCard review={review} />)}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero { padding: 48px 0 30px; text-align: center; }
+  .hero h1 { font-size: 34px; margin-bottom: 12px; }
+  .hero p { color: var(--mut); max-width: 600px; margin: 0 auto; }
+  .feat { display: grid; grid-template-columns: 1.1fr 1fr; gap: 0; margin: 24px 0;
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .feat-img { background: #0b1119; }
+  .feat-img img { width: 100%; height: 100%; object-fit: cover; min-height: 240px; }
+  .feat-body { padding: 26px; display: flex; flex-direction: column; justify-content: center; }
+  .feat-body h2 { font-size: 24px; margin: 12px 0; }
+  .feat-body p { color: var(--mut); margin-bottom: 16px; }
+  .feat-price { color: var(--brand2); font-weight: 800; font-size: 22px; }
+  .sec-title { font-size: 20px; margin: 34px 0 16px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
+  @media (max-width: 720px) { .feat { grid-template-columns: 1fr; } .hero h1 { font-size: 26px; } }
+</style>

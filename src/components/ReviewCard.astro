@@ -1,0 +1,30 @@
+---
+// Card 1 bài review hiển thị ở trang chủ / danh mục.
+const { review } = Astro.props;
+const { data, slug } = review;
+const catLabel = { pc: "Linh kiện PC", sach: "Sách", decor: "Decor" }[data.category];
+const stars = "★".repeat(Math.round(data.rating)) + "☆".repeat(5 - Math.round(data.rating));
+---
+<a href={`/review/${slug}`} class="rc">
+  <div class="rc-img"><img src={data.image} alt={data.productName} loading="lazy" /></div>
+  <div class="rc-body">
+    <span class={`badge b-${data.category}`}>{catLabel}</span>
+    <h3>{data.title}</h3>
+    <div class="rc-meta">
+      <span class="stars">{stars}</span>
+      <span class="price">{data.price}</span>
+    </div>
+  </div>
+</a>
+<style>
+  .rc { display: block; background: var(--card); border: 1px solid var(--line);
+    border-radius: var(--radius); overflow: hidden; transition: transform .15s, border-color .15s; }
+  .rc:hover { transform: translateY(-3px); border-color: var(--brand); }
+  .rc-img { aspect-ratio: 16/10; background: #0b1119; overflow: hidden; }
+  .rc-img img { width: 100%; height: 100%; object-fit: cover; }
+  .rc-body { padding: 14px; }
+  .rc-body h3 { font-size: 15px; margin: 8px 0 10px; line-height: 1.4; }
+  .rc-meta { display: flex; justify-content: space-between; align-items: center; }
+  .stars { color: var(--yellow); font-size: 14px; }
+  .price { color: var(--brand2); font-weight: 800; font-size: 15px; }
+</style>
